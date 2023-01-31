@@ -18,6 +18,7 @@ function TopBar() {
 					<Toolbar>
             <FormatListNumberedIcon />
 						<Typography variant="h6" noWrap component="div">
+              app
 						</Typography>
 
                     <Link to="./addtask">
