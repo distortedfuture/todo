@@ -4,8 +4,22 @@ import tasks from "./tasks.json";
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { Form } from "react-router-dom";
 import { useEffect, useState } from "react";
+import {app} from "./firebaseconfig";
+import { getFirestore } from "@firebase/firestore";
+import { collection, doc, setDoc } from "@firebase/firestore"; 
+
+/*
+
+TODO add news tasks to firestore
+
+*/ 
+
 
 let isUrgent = false;
+
+const db = getFirestore(app);
+
+
 
 const getDate = () => {
     let current = new Date();
@@ -13,15 +27,13 @@ const getDate = () => {
     return(current.getDate());
 }
 
-const addToTasks = (title, text, due) =>
+async function addToTasks(_title, _text, _due)
 {
-    let newTask = {
-        "title":title,
-        "text":text,
-        "due":due,
-        "urgent":isUrgent
-    };
-    tasks.push(newTask);
+    let tasks = collection(db, "tasks");
+
+    await setDoc( doc(tasks, _title), {
+        title: _title, complete : false, urgent : false, body : _text, due : _due
+    } );
 
 }
 
@@ -59,7 +71,6 @@ export default function ToDo ( {title, text} ) {
             <TextField xs={3} label="Title" variant="outlined" name="title" />
             <TextField i xs={6} d={title} multiline variant="outlined" label={title} name="text" />
 
-            <Button variant="outlined contained" type="submit"  >Add Task</Button>
 
                 <TextField
                     id="date"
@@ -80,6 +91,8 @@ export default function ToDo ( {title, text} ) {
 
             </ToggleButtonGroup>
 
+                <Button variant="outlined contained" type="submit"  >Add Task</Button>
+                
            </Stack>
         </Card>
 

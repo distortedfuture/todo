@@ -7,7 +7,11 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import moment from 'moment';
+import { useEffect, useState } from 'react';
+import { app } from './firebaseconfig';
+import { collection, getDocs, doc, getFirestore } from '@firebase/firestore';
 
+const db = getFirestore(app);
 
 const daysTilDue = (date) => {
   let current = new Date();
@@ -23,6 +27,17 @@ const daysTilDue = (date) => {
 
 
 function ViewTasks() {
+
+  const [todo, getTodo] = useState(null);
+
+  useEffect(  () => {
+
+    getDocs( collection(db, "tasks") ).then( data => {
+      console.log(data.getDocs)
+    } );
+
+    }, [] );
+
   return (
       <div className='App'>
       <>
