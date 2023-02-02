@@ -28,13 +28,16 @@ const daysTilDue = (date) => {
 
 function ViewTasks() {
 
-  const [todo, getTodo] = useState(null);
+  const [todos, setTodos] = useState(null);
 
   useEffect(  () => {
 
-    getDocs( collection(db, "tasks") ).then( data => {
-      console.log(data.getDocs)
+    getDocs( collection(db, "tasks") ).then( snapshot => {
+    const newData = snapshot.docs.map( doc => ({...doc.data, id:doc.id}) );
+    setTodos(newData);
     } );
+    console.log(todos);
+
 
     }, [] );
 

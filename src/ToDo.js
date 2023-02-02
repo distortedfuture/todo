@@ -1,4 +1,4 @@
-import { Radio,Chip, Card,Grid, Box, CssBaseline, Typography, AppBar, Toolbar, TextField, Button, Avatar, ToggleButton, ToggleButtonGroup} from "@mui/material";
+import { FormControlLabel, FormGroup ,Switch, Card,Grid, Box, CssBaseline, Typography, AppBar, Toolbar, TextField, Button, Avatar, ToggleButton, ToggleButtonGroup} from "@mui/material";
 import Stack from '@mui/material/Stack';
 import tasks from "./tasks.json";
 import ScheduleIcon from '@mui/icons-material/Schedule';
@@ -15,7 +15,7 @@ TODO add news tasks to firestore
 */ 
 
 
-let isUrgent = false;
+let isUrgent = true;
 
 const db = getFirestore(app);
 
@@ -27,12 +27,12 @@ const getDate = () => {
     return(current.getDate());
 }
 
-async function addToTasks(_title, _text, _due)
+async function addToTasks(_title, _text, _due, _urgent)
 {
     let tasks = collection(db, "tasks");
 
     await setDoc( doc(tasks, _title), {
-        title: _title, complete : false, urgent : false, body : _text, due : _due
+        title: _title, complete : false, urgent : _urgent, body : _text, due : _due
     } );
 
 }
@@ -42,11 +42,12 @@ export default function ToDo ( {title, text} ) {
 
     const [date, setDate] = useState(null);
 
-    const handleToggleUrgent = (e) => {
+    const toggleUrgent = (e) => {
         isUrgent = !isUrgent;
-        e.target.color = (isUrgent)? "secondary" : "primary";
-        console.log(e.target.color)
+        // e.target.color = (isUrgent)? "secondary" : "primary";
+        console.log(isUrgent)
     }
+
     const addTaskFromForm = (e) => {
         console.log("working...");
         e.preventDefault();
@@ -54,7 +55,7 @@ export default function ToDo ( {title, text} ) {
         let text = e.target.elements.text.value;
         let date= e.target.elements.date.value;
         console.log(date);
-        addToTasks(title, text, date)
+        addToTasks(title, text, date, isUrgent)
     }
     useEffect( () =>{
         let d = getDate();
@@ -84,13 +85,15 @@ export default function ToDo ( {title, text} ) {
                     shrink: true,
                 }}  />
 
-            <ToggleButtonGroup exclusive>
+            {/* <ToggleButtonGroup exclusive>
             <ToggleButton  >
                 <ScheduleIcon color="primary"  onClick={handleToggleUrgent}/>
             </ToggleButton>
 
-            </ToggleButtonGroup>
-
+            </ToggleButtonGroup> */}
+    <FormGroup>
+        <FormControlLabel control={<Switch defaultChecked />} label="urgent" onChange={toggleUrgent} />
+    </FormGroup>
                 <Button variant="outlined contained" type="submit"  >Add Task</Button>
                 
            </Stack>
