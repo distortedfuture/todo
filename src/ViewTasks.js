@@ -8,16 +8,16 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { app } from './firebaseconfig';
+import { app, db } from './firebaseconfig';
 import { collection, getDocs, doc, getFirestore } from '@firebase/firestore';
 
-const db = getFirestore(app);
+// const db = getFirestore(app);
 
 const daysTilDue = (date) => {
   let current = new Date();
 
-  let today = moment(current, "MM-DD-YYYY");
-  let due = moment(date, "MM-DD-YYYY");
+  let today = moment(current, "YYYY-MM-DD");
+  let due = moment(date, "YYYY-MM-DD");
 
   let result = due.diff(today, "days");
 
@@ -28,25 +28,28 @@ const daysTilDue = (date) => {
 
 function ViewTasks() {
 
-  const [todos, setTodos] = useState(null);
+  const [todos, setTodos] = useState([]);
+  const taskCollectionRef = collection(db, "tasks");
 
   useEffect(  () => {
+    var getTasks = async () => {
+      const data = await getDocs(taskCollectionRef);
+      setTodos(data.docs.map( (doc)=> ({...doc.data(), id:doc.id}) ))
+      console.log(todos)
 
-    getDocs( collection(db, "tasks") ).then( snapshot => {
-    const newData = snapshot.docs.map( doc => ({...doc.data, id:doc.id}) );
-    setTodos(newData);
-    } );
-    console.log(todos);
+    }
+
+    getTasks();
+  }, [] );
 
 
-    }, [] );
 
   return (
       <div className='App'>
       <>
 
       {
-        tasks.map( (task) => {
+        todos.map( (task) => {
           return(
             <div key={task.id}>
               <Accordion>
@@ -57,8 +60,8 @@ function ViewTasks() {
                 <Typography> {task.title} </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Typography> {task.text}</Typography>
-                    <Typography> due in { daysTilDue(task.due) } days</Typography>
+                    <Typography> {task.body}</Typography>
+                    <Typography> due in { daysTilDue( JSON.stringify(task.due) ) } days</Typography>
 
                 </AccordionDetails>
               </Accordion>

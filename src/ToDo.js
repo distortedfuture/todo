@@ -4,7 +4,7 @@ import tasks from "./tasks.json";
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { Form } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {app} from "./firebaseconfig";
+import { db } from "./firebaseconfig";
 import { getFirestore } from "@firebase/firestore";
 import { collection, doc, setDoc } from "@firebase/firestore"; 
 
@@ -17,7 +17,6 @@ TODO add news tasks to firestore
 
 let isUrgent = true;
 
-const db = getFirestore(app);
 
 
 
@@ -46,6 +45,7 @@ export default function ToDo ( {title, text} ) {
         isUrgent = !isUrgent;
         // e.target.color = (isUrgent)? "secondary" : "primary";
         console.log(isUrgent)
+        // e.target.label = isUrgent ? "urgent": "I got time"
     }
 
     const addTaskFromForm = (e) => {
