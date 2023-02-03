@@ -9,7 +9,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { app, db } from './firebaseconfig';
-import { collection, getDocs, doc, getFirestore } from '@firebase/firestore';
+import { collection, getDocs, doc, getFirestore, deleteDoc } from '@firebase/firestore';
 
 // const db = getFirestore(app);
 
@@ -31,12 +31,16 @@ function ViewTasks() {
   const [todos, setTodos] = useState([]);
   const taskCollectionRef = collection(db, "tasks");
 
+  const deleteTask = async (id) => {
+    const task = doc(db, "tasks", id);
+    await deleteDoc(task);
+  }
+
   useEffect(  () => {
     var getTasks = async () => {
       const data = await getDocs(taskCollectionRef);
       setTodos(data.docs.map( (doc)=> ({...doc.data(), id:doc.id}) ))
       console.log(todos)
-
     }
 
     getTasks();
@@ -62,6 +66,7 @@ function ViewTasks() {
                 <AccordionDetails>
                     <Typography> {task.body}</Typography>
                     <Typography> due in { daysTilDue( JSON.stringify(task.due) ) } days</Typography>
+                    <Button variant="contained" onClick={() => {deleteTask(task.id)} } >delete</Button>
 
                 </AccordionDetails>
               </Accordion>
