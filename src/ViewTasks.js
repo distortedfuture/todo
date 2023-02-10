@@ -1,17 +1,11 @@
 
 import './App.css';
-import { Accordion, Stack, Button,Box, Typography} from "@mui/material";
-import tasks from "./tasks.json"
-
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Card, Accordion, Stack, Button, Box, Typography, CardContent,CardActions , Grid} from "@mui/material";
 import moment from 'moment';
-import { useEffect, useState } from 'react';
-import { app, db } from './firebaseconfig';
-import { collection, getDocs, doc, getFirestore, deleteDoc } from '@firebase/firestore';
 
-// const db = getFirestore(app);
+import { useEffect, useState } from 'react';
+import { db } from './firebaseconfig';
+import { collection, getDocs, doc, deleteDoc, updateDoc } from '@firebase/firestore';
 
 const daysTilDue = (date) => {
   let current = new Date();
@@ -30,10 +24,26 @@ function ViewTasks() {
 
   const [todos, setTodos] = useState([]);
   const taskCollectionRef = collection(db, "tasks");
+  
 
   const deleteTask = async (id) => {
     const task = doc(db, "tasks", id);
     await deleteDoc(task);
+    let helper = todos.filter((task) => {
+      return task.id !== id;
+    })
+    setTodos(helper);
+  }
+
+  const doneTask = async (id) => {
+    const task = doc(db, "tasks", id);
+    await updateDoc(task, {
+      complete : true
+    })
+    let helper = todos.filter((task) => {
+      return task.id !== id;
+    })
+    setTodos(helper);
   }
 
   useEffect(  () => {
@@ -51,31 +61,42 @@ function ViewTasks() {
   return (
       <div className='App'>
       <>
-
+      <Grid container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justify="center"
+      style={{ minHeight: '100vh' }}  
+      >
       {
         todos.map( (task) => {
-          return(
+          return task.complete? "" : (
             <div key={task.id}>
-              <Accordion>
-                <AccordionSummary ExpandIcon={<ExpandMoreIcon/>} 
-                aria-controls="panella-content"
-                id={task.id}
-                > 
-                <Typography> {task.title} </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Typography> {task.body}</Typography>
-                    <Typography> due in { daysTilDue( JSON.stringify(task.due) ) } days</Typography>
-                    <Button variant="contained" onClick={() => {deleteTask(task.id)} } >delete</Button>
+            <Grid  item xs={6} sx={{ maxWidth:400, minWidth:300, align:'center', padding:4}}>
+              <Card >
+                <CardContent >
+                  <Typography variant='h5' sx={{ textDecoration:"underline" }}  gutterBottom>{task.title}</Typography>
+                  <Typography variant='paragraph'>{task.body}</Typography>
+                  <br></br>
+                  <Typography variant='paragraph'  >due in { daysTilDue(task.due)} days</Typography>
+                </CardContent>
+              <CardActions>
+                <Button variant='outlined' color="success" onClick={ ()=> { doneTask(task.id) } } >done!</Button>
+                <Button variant='outlined' color="error" onClick={ ()=> { deleteTask(task.id) } } >delete</Button>
+              </CardActions>
 
-                </AccordionDetails>
-              </Accordion>
-            </div>
+              </Card>
+
+            </Grid>
+
+              </div>
           );
         } )
       }
-      </>
-      </div>
+      </Grid>
+    </>
+    </div>
+
 
   );
 }
@@ -83,21 +104,6 @@ function ViewTasks() {
 export default ViewTasks;
 
 
-
-/*
-      {
-        tasks.map( (task) => {
-          return(
-            <>
-            <Typography> {task.title} </Typography>
-            <Typography> {task.text} </Typography>
-            <Typography> {task.due} </Typography>
-            </>
-          );
-        } )
-      }
-
-*/ 
 
 
 

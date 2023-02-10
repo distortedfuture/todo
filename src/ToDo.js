@@ -43,9 +43,6 @@ export default function ToDo ( {title, text} ) {
 
     const toggleUrgent = (e) => {
         isUrgent = !isUrgent;
-        // e.target.color = (isUrgent)? "secondary" : "primary";
-        console.log(isUrgent)
-        // e.target.label = isUrgent ? "urgent": "I got time"
     }
 
     const addTaskFromForm = (e) => {
@@ -56,10 +53,14 @@ export default function ToDo ( {title, text} ) {
         let date= e.target.elements.date.value;
         console.log(date);
         addToTasks(title, text, date, isUrgent)
+
+        e.target.elements.title.value="";
+        e.target.elements.text.value="";
+
     }
     useEffect( () =>{
         let d = getDate();
-        setDate(d);
+        setDate(d); 
     }, [] );
 
     
@@ -70,7 +71,7 @@ export default function ToDo ( {title, text} ) {
 
         <Stack direction="row" spacing={3}  >
             <TextField xs={3} label="Title" variant="outlined" name="title" />
-            <TextField i xs={6} d={title} multiline variant="outlined" label={title} name="text" />
+            <TextField  xs={6} id={title} multiline variant="outlined" label="info" name="text" />
 
 
                 <TextField
@@ -85,12 +86,6 @@ export default function ToDo ( {title, text} ) {
                     shrink: true,
                 }}  />
 
-            {/* <ToggleButtonGroup exclusive>
-            <ToggleButton  >
-                <ScheduleIcon color="primary"  onClick={handleToggleUrgent}/>
-            </ToggleButton>
-
-            </ToggleButtonGroup> */}
     <FormGroup>
         <FormControlLabel control={<Switch defaultChecked />} label="urgent" onChange={toggleUrgent} />
     </FormGroup>

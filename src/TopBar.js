@@ -1,33 +1,42 @@
 import './App.css';
-import { Button,Box, CssBaseline, Typography, AppBar, Toolbar, Icon} from "@mui/material";
-import {
-    BrowserRouter as Router,
-    Route,
-    Routes,
-    Link
-  } from 'react-router-dom';
+import { Button,Box, CssBaseline, Typography, AppBar, Toolbar, Stack, Modal} from "@mui/material";
+import { Link } from 'react-router-dom';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import { useState } from 'react';
+import AddModel from './AddModel';
+
+
+
+
 
 
 function TopBar() {
-  return (
 
-			<Box sx={{ display: 'flex' }}>
+  const [adding, setAdding] = useState(false);
+
+  return (
+    <>
+
+			<Box sx={{ flexGrow:1 }}>
 				<CssBaseline />
 				<AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-					<Toolbar>
-            <FormatListNumberedIcon />
-						<Typography variant="h6" noWrap component="div">
-              app
-						</Typography>
+					<Toolbar sx={{justifyContent: "space-between"}}>
+            <Stack direction="row">
 
-                    <Link to="./addtask">
-                    <Button  variant="contained" sx={{ p:2, m:2 }}>Add Task</Button>
-                    </Link>
-                    <Link to="./viewtasks" >
-                    <Button  variant="contained" sx={{ p:2, m:2 }}>See Tasks</Button>
-                    </Link>
+            <Stack direction="row">
+              <FormatListNumberedIcon />
 
+            </Stack>
+
+                      <Link to="./viewtasks" >
+                      <Button  variant="contained" sx={{ p:2, m:2 }}>See Tasks</Button>
+                      </Link>
+                      <Link to="./doneTasks" >
+                      <Button  variant="contained" sx={{ p:2, m:2 }}>Completed Tasks</Button>
+                      </Link>
+                      {/* <Button onClick={ ()=> { setAdding(!adding) }} sx={{ }} > <Avatar>+</Avatar> </Button> */}
+            </Stack>
+            <AddModel />
 					</Toolbar>
         </AppBar>
     <Box sx={{flexGrow: 1}}>
@@ -35,12 +44,11 @@ function TopBar() {
         </Box>
 	</Box>
 
+      </>
+
 
   );
 }
 
 export default TopBar;
-
-
-
 
