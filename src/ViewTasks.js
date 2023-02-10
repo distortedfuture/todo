@@ -1,8 +1,8 @@
 
 import './App.css';
-import { Card, Accordion, Stack, Button, Box, Typography, CardContent,CardActions , Grid} from "@mui/material";
+import { Card, Button, Typography, CardContent,CardActions , Grid, Avatar} from "@mui/material";
 import moment from 'moment';
-
+import ErrorIcon from '@material-ui/icons/Error';
 import { useEffect, useState } from 'react';
 import { db } from './firebaseconfig';
 import { collection, getDocs, doc, deleteDoc, updateDoc } from '@firebase/firestore';
@@ -61,18 +61,18 @@ function ViewTasks() {
   return (
       <div className='App'>
       <>
-      <Grid container
+      <Grid container 
+      rowSpacing={1}
+      columnSpacing={{ xs: 1, sm: 2, md: 3 }}
       spacing={0}
-      direction="column"
-      alignItems="center"
-      justify="center"
-      style={{ minHeight: '100vh' }}  
+      justifyContent={"space-between"}
+      style={{ minHeight: '100vh', padding:150 }}  
       >
       {
         todos.map( (task) => {
           return task.complete? "" : (
             <div key={task.id}>
-            <Grid  item xs={6} sx={{ maxWidth:400, minWidth:300, align:'center', padding:4}}>
+            <Grid  item xs={4} sx={{ maxWidth:400, minWidth:300,  padding:4}}>
               <Card >
                 <CardContent >
                   <Typography variant='h5' sx={{ textDecoration:"underline" }}  gutterBottom>{task.title}</Typography>
@@ -83,6 +83,7 @@ function ViewTasks() {
               <CardActions>
                 <Button variant='outlined' color="success" onClick={ ()=> { doneTask(task.id) } } >done!</Button>
                 <Button variant='outlined' color="error" onClick={ ()=> { deleteTask(task.id) } } >delete</Button>
+                { task.urgent?   <Avatar sx={{ m:2 }}>!</Avatar>   :""}
               </CardActions>
 
               </Card>

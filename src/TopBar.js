@@ -23,10 +23,7 @@ function TopBar() {
 					<Toolbar sx={{justifyContent: "space-between"}}>
             <Stack direction="row">
 
-            <Stack direction="row">
-              <FormatListNumberedIcon />
-
-            </Stack>
+              <FormatListNumberedIcon sx={{ mt:5 }}/>
 
                       <Link to="./viewtasks" >
                       <Button  variant="contained" sx={{ p:2, m:2 }}>See Tasks</Button>
@@ -34,7 +31,6 @@ function TopBar() {
                       <Link to="./doneTasks" >
                       <Button  variant="contained" sx={{ p:2, m:2 }}>Completed Tasks</Button>
                       </Link>
-                      {/* <Button onClick={ ()=> { setAdding(!adding) }} sx={{ }} > <Avatar>+</Avatar> </Button> */}
             </Stack>
             <AddModel />
 					</Toolbar>

@@ -23,40 +23,24 @@ const DoneTasks = () => {
 
 
     return (
-<div className='App'>
-      <>
-      <Grid container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justify="center"
-      style={{ minHeight: '100vh' }}  
-      >
-      {
-        todos.map( (task) => {
-        if (task.complete)
-             return (
-                    <div key={task.id}>
-            <Grid  item xs={6} sx={{ maxWidth:400, minWidth:300, align:'center', padding:4}}>
-              <Card >
-                <CardContent >
-                  <Typography variant='h5' sx={{ textDecoration:"underline" }}  gutterBottom>{task.title}</Typography>
-                </CardContent>
-              <CardActions>
-                <Button variant='outlined' color="error" onClick={ ()=> { deleteTask(task.id) } } >delete</Button>
-              </CardActions>
+        <>
 
-              </Card>
+        <TopBar/>
+        <Typography gutterBottom variant="h4">done tasks homie</Typography>
+        {
+            todos.map( (task) => {
+                if (task.complete)
+                    return (
+                        <>
+                            <Typography variant="h4">{task.title}</Typography>
 
-            </Grid>
+                        </>
+                    );
+                
+            } )
+        }
 
-              </div>
-          );
-        } )
-      }
-      </Grid>
-    </>
-    </div>
+        </>
     )
 }
 

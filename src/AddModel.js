@@ -59,7 +59,6 @@ export default function FormDialog() {
         <IconButton onClick={handleClickOpen} style={{color: "white"}}>
             <Add />
         </IconButton>
-        {/* <Avatar >+</Avatar> */}
 
       <Dialog open={open} onClose={handleClose} >
         <form  onSubmit={handleSubmit}>
