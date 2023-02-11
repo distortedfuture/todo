@@ -1,46 +1,64 @@
-import { TaskSharp } from "@mui/icons-material";
-import { CardActions, CardContent, Typography } from "@mui/material";
-import { Card } from "@material-ui/core";
-import { collection , getDocs} from "@firebase/firestore";
-import React, { useState, useEffect } from "react";
-import TopBar from "./TopBar";
+import React from "react";
+import { Grid } from "@mui/material";
+import { deleteDoc, doc , updateDoc }from "@firebase/firestore";
 import { db } from "./firebaseconfig";
+import Task from "./Task";
 
 
-const DoneTasks = () => {
+const DoneTasks = (props) => {
 
-    const [todos, setTodos] = useState([]);
-    const taskCollectionRef = collection(db, "tasks");
 
-    useEffect( () => {
-        var getTasks = async () => {
-          const data = await getDocs(taskCollectionRef);
-          setTodos(data.docs.map( (doc)=> ({...doc.data(), id:doc.id}) ))
-        }
-    
-        getTasks();
-      }, [] );
-
+    const handleDone = async (todo) => {
+        const task = doc(db, "tasks", todo.id);
+        await updateDoc(task, {
+          complete : (!todo.complete)
+        })
+        let helper = props.data.filter((task) => {
+          return task.id !== todo.id;
+        })
+        props.setter(helper);
+      }
+      const handleDelete = async (todo) => {
+        const task = doc(db, "tasks", todo.id);
+        await deleteDoc(task);
+        let helper = props.data.filter((task) => {
+          return task.id !== todo.id;
+        })
+        props.setter(helper);
+      }
 
     return (
-        <>
+        
+        <Grid container 
+            rowSpacing={1}
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            spacing={0}
+            justifyContent={"space-between"}
+            style={{ minHeight: '100vh', padding:150 }}  >
 
-        <TopBar/>
-        <Typography gutterBottom variant="h4">done tasks homie</Typography>
+
+
+
         {
-            todos.map( (task) => {
+            props.data.map( (task) => {
                 if (task.complete)
-                    return (
-                        <>
-                            <Typography variant="h4">{task.title}</Typography>
+                return (
+                    <div key={task.id}>
+            <Grid  item xs={4} sx={{ maxWidth:400, minWidth:300,  padding:4}}>
 
-                        </>
+                <Task task={task}  onUpdate={ () => handleDone(task) } onDelete={() => handleDelete(task)} />
+
+                </Grid>
+
+                </div>
                     );
-                
-            } )
-        }
+                    
+                } )
+            }
+            </Grid>
 
-        </>
+
+        // </div>
     )
 }
 

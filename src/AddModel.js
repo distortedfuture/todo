@@ -9,7 +9,7 @@ import { IconButton, Switch, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Box } from '@mui/system';
 import { db } from './firebaseconfig';
-import { collection, doc, setDoc } from '@firebase/firestore';
+import { collection, doc, setDoc, getDocs } from '@firebase/firestore';
 import { Add } from '@mui/icons-material';
 
 async function addToTasks(_title, _text, _due, _urgent)
@@ -23,10 +23,10 @@ async function addToTasks(_title, _text, _due, _urgent)
 }
 
 
-export default function FormDialog() {
+export default function AddModel (props) {
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState(null);
   const [isUrgent, setUrgent] = useState(!false );
+  const taskCollectionRef = collection(db, "tasks");
 
 
   const handleClickOpen = () => {
@@ -51,6 +51,16 @@ export default function FormDialog() {
 
     e.target.elements.title.value="";
     e.target.elements.text.value="";
+
+
+    // update data list
+    var setTasks = async () => {
+      const data = await getDocs(taskCollectionRef);
+      props.setter(data.docs.map( (doc)=> ({...doc.data(), id:doc.id}) ));
+      console.log(data);
+    }
+    setTasks();
+    handleClose();
   };
 
 
@@ -64,14 +74,13 @@ export default function FormDialog() {
         <form  onSubmit={handleSubmit}>
 
 
-        <DialogTitle>Add Task</DialogTitle>
+        <DialogTitle>Add A Task</DialogTitle>
         <DialogContent>
 
             <Box  sx={{ mb:5, mt:5}} direction="col" >
 
-        <TextField xs={3} label="Title" variant="outlined" name="title" />
-        <TextField  xs={6}  multiline variant="outlined" label="info" name="text" />
-
+            <TextField xs={3} label="Title" variant="outlined" name="title" />
+            <TextField  xs={6}  multiline variant="outlined" label="Info" name="text" />
 
             </Box>
 
@@ -81,7 +90,6 @@ export default function FormDialog() {
                     name ="date"
                     label="Due Date"
                     type="date"
-                    defaultValue = {date}
                     sx={{ width: 220, p:2}}
                     size={"small"}
                     InputLabelProps={{
@@ -96,10 +104,11 @@ export default function FormDialog() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button color="success"  type='submit'>Add!</Button>
+          <Button color="success"  type='submit'>Add</Button>
         </DialogActions>
         </form>
       </Dialog>
     </div>
   );
 }
+

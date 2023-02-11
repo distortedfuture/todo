@@ -10,9 +10,7 @@ import AddModel from './AddModel';
 
 
 
-function TopBar() {
-
-  const [adding, setAdding] = useState(false);
+function TopBar(props) {
 
   return (
     <>
@@ -32,7 +30,7 @@ function TopBar() {
                       <Button  variant="contained" sx={{ p:2, m:2 }}>Completed Tasks</Button>
                       </Link>
             </Stack>
-            <AddModel />
+            <AddModel  data={props.data} setter={props.setter}  />
 					</Toolbar>
         </AppBar>
     <Box sx={{flexGrow: 1}}>
