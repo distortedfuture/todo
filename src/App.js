@@ -5,6 +5,8 @@ import ViewTasks from "./ViewTasks"
 import DoneTasks from './DoneTasks';
 import { Route, Routes,} from 'react-router-dom';
 import { db } from './firebaseconfig';
+import { auth } from './firebaseconfig';
+import { signInAnonymously } from '@firebase/auth';
 import { useState, useEffect } from 'react';
 import { collection , getDocs} from '@firebase/firestore';
 
@@ -31,7 +33,16 @@ function App() {
       console.log("reset data in app");
     }
 
-    getTasks();
+    signInAnonymously(auth).then((user) => {
+      if (!user) {
+        console.log("Login failed");
+        return;
+      }
+  
+      getTasks();
+
+    })
+
   }, [] );
 
 
