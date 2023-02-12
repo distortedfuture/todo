@@ -22,8 +22,14 @@ function App() {
   const [data, setData] = useState([]);
   const taskCollectionRef = collection(db, "tasks");
 
-  const Setter = (newData) => {
-    setData(newData);
+  const resetData = async (newData) => {
+    newData = await getDocs(taskCollectionRef);
+    setData(newData.docs.map( (doc)=> ({...doc.data(), id:doc.id}) ));
+
+  }
+
+  const Setter = async (newData) => {
+    resetData(newData);
   }
 
   useEffect(  () => {
