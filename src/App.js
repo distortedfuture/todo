@@ -25,7 +25,7 @@ function App() {
   const resetData = async (newData) => {
     newData = await getDocs(taskCollectionRef);
     setData(newData.docs.map( (doc)=> ({...doc.data(), id:doc.id}) ));
-
+    console.log("reset data in app");
   }
 
   const Setter = async (newData) => {
@@ -34,9 +34,7 @@ function App() {
 
   useEffect(  () => {
     var getTasks = async () => {
-      const data = await getDocs(taskCollectionRef);
-      setData(data.docs.map( (doc)=> ({...doc.data(), id:doc.id}) ));
-      console.log("reset data in app");
+      resetData([]);
     }
 
     signInAnonymously(auth).then((user) => {
