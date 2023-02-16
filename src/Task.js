@@ -39,9 +39,10 @@ const daysTilDue = (date) => {
             </CardContent>
 
           <CardActions>
-            <Button vari ant='outlined' color="success" onClick={ props.onUpdate } >done</Button>
-            <Button variant='outlined' color="error" onClick={ props.onDelete } >delete</Button>
-                  { props.task.urgent?    <ErrorOutlineIcon  item sx={{ m:1 }}  color="primary"/> : "" }
+            <Button vari ant='outlined' size="small" color="success" onClick={ props.onUpdate } >done</Button>
+            <Button variant='outlined' size="small"  color="error" onClick={ props.onDelete } >delete</Button>
+
+            { props.task.urgent?    <ErrorOutlineIcon  item sx={{ m:1 }}  color="primary"/> : "" }
           </CardActions>
     
           </Card>
@@ -58,7 +59,7 @@ const daysTilDue = (date) => {
                 <Button variant='outlined' color="error" onClick={ props.onDelete } >delete</Button>
                 <Button variant='outlined'  color="success" onClick={ props.onUpdate } >undone</Button>
               </CardActions>
-        
+    
               </Card>
 
             );
