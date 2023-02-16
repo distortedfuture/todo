@@ -9,22 +9,18 @@ import { db } from "./firebaseconfig";
 function ViewTasks(props) {
   
   const handleDone = async (todo) => {
+    // create doc inst
     const task = doc(db, "tasks", todo.id);
+    // toggle done task
     await updateDoc(task, {
       complete : (!todo.complete)
     })
-    let helper = props.data.filter((task) => {
-      return task.id !== todo.id;
-    })
-    props.setter(helper);
+    props.setter();
   }
   const handleDelete = async (todo) => {
     const task = doc(db, "tasks", todo.id);
     await deleteDoc(task);
-    let helper = props.data.filter((task) => {
-      return task.id !== todo.id;
-    })
-    props.setter(helper);
+    props.setter();
   }
 
 

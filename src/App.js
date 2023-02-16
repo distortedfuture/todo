@@ -22,8 +22,8 @@ function App() {
   const [data, setData] = useState([]);
   const taskCollectionRef = collection(db, "tasks");
 
-  const resetData = async (newData) => {
-    newData = await getDocs(taskCollectionRef);
+  const resetData = async () => {
+    let newData = await getDocs(taskCollectionRef);
     setData(newData.docs.map( (doc)=> ({...doc.data(), id:doc.id}) ));
     console.log("reset data in app");
   }

@@ -1,8 +1,7 @@
 import './App.css';
-import { Button,Box, CssBaseline, Typography, AppBar, Toolbar, Stack, Modal} from "@mui/material";
+import { Button,Box, CssBaseline, AppBar, Toolbar, Stack} from "@mui/material";
 import { Link } from 'react-router-dom';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import { useState } from 'react';
 import AddModel from './AddModel';
 
 

@@ -33,13 +33,13 @@ const daysTilDue = (date) => {
               <Typography variant='h5' item sx={{ color:"blue" }}  gutterBottom>{props.task.title}</Typography>
               </Stack>
 
-              <Typography variant='subtitle' gutterBottom sx={{ p:1, mb:1 }} >{props.task.body}</Typography>
+              <Typography variant='subtitle'  gutterBottom sx={{ p:1, mb:1 }} >{props.task.body}</Typography>
               <br></br>
               <Typography variant="subtitle2"  sx={{ mt:3, mb:0, textAlign:"center" }} >due in { daysTilDue(props.task.due)} days</Typography>
             </CardContent>
 
           <CardActions>
-            <Button variant='outlined' color="success" onClick={ props.onUpdate } >done!</Button>
+            <Button vari ant='outlined' color="success" onClick={ props.onUpdate } >done</Button>
             <Button variant='outlined' color="error" onClick={ props.onDelete } >delete</Button>
                   { props.task.urgent?    <ErrorOutlineIcon  item sx={{ m:1 }}  color="primary"/> : "" }
           </CardActions>
@@ -56,7 +56,7 @@ const daysTilDue = (date) => {
                 </CardContent>
               <CardActions>
                 <Button variant='outlined' color="error" onClick={ props.onDelete } >delete</Button>
-                <Button variant='outlined' color="success" onClick={ props.onUpdate } >undone</Button>
+                <Button variant='outlined'  color="success" onClick={ props.onUpdate } >undone</Button>
               </CardActions>
         
               </Card>
