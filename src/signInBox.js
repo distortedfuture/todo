@@ -7,6 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import PersonIcon from '@mui/icons-material/Person';
+import { IconButton } from '@mui/material';
 
 
 
@@ -37,19 +38,22 @@ export default function SignInBox(props) {
   return (
     <div>
 
-      <PersonIcon onClick={handleClickOpen} sx={{mt:5}} />
+      <IconButton onClick={handleClickOpen}  style={{color: "white", mt:2}}>
+
+      <PersonIcon size='large' sx={{mt:2}} />
+        </IconButton>
 
         
       <Dialog open={open} onClose={handleClose}>
-      <form  onSubmit={handleSignIn}  >
+      <form  onSubmit={handleSignIn}>
 
-        <DialogTitle>Sign In</DialogTitle>
+        <DialogTitle>Papers, please</DialogTitle>
         <DialogContent>
           <DialogContentText>
-             sign in ya dummy
+             Sign in ya dummy
           </DialogContentText>
           <TextField
-            autoFocus
+            
             margin="dense"
             id="email"
             label="Email Address"
@@ -59,7 +63,7 @@ export default function SignInBox(props) {
           />
 
         <TextField
-            autoFocus
+            
             margin="dense"
             id="pass"
             label="Password"

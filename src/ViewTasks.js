@@ -29,7 +29,7 @@ function ViewTasks(props) {
 
             </Grid>
 
-              </div>
+            </div>
           );
         } )
       }

@@ -9,7 +9,7 @@ import { IconButton, Switch, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Box } from '@mui/system';
 import { db } from './firebaseconfig';
-import { collection, doc, setDoc, getDocs } from '@firebase/firestore';
+import { collection, doc, setDoc } from '@firebase/firestore';
 import { Add } from '@mui/icons-material';
 
 
@@ -17,8 +17,6 @@ import { Add } from '@mui/icons-material';
 export default function AddModel (props) {
   const [open, setOpen] = useState(false);
   const [isUrgent, setUrgent] = useState(!false );
-
-  const taskCollectionRef = props.ref;
   
   async function addToTasks(_title, _text, _due, _urgent)
   {
@@ -53,14 +51,6 @@ export default function AddModel (props) {
     e.target.elements.title.value="";
     e.target.elements.text.value="";
 
-
-    // update data list
-    // var setTasks = async () => {
-    //   const data = await getDocs(taskCollectionRef);
-    //   props.setter();
-    //   console.log(data);
-    // }
-    // setTasks();
     props.setter();
     handleClose();
   };

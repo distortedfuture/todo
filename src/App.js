@@ -4,15 +4,14 @@ import { Typography } from '@mui/material';
 import TopBar from "./TopBar"
 import ViewTasks from "./ViewTasks"
 import DoneTasks from './DoneTasks';
-import { Route, Routes,} from 'react-router-dom';
+import { Route, Routes, BrowserRouter} from 'react-router-dom';
 import { db } from './firebaseconfig';
 import { auth } from './firebaseconfig';
-import { signInAnonymously, signInWithEmailAndPassword, signOut } from '@firebase/auth';
+import { signInAnonymously, signOut } from '@firebase/auth';
 import { useState, useEffect } from 'react';
 import { collection , getDocs, doc, deleteDoc, updateDoc } from '@firebase/firestore';
-import { Grid } from '@material-ui/core';
-import { Box } from '@mui/system';
-import { Stack } from '@mui/system';
+import { getAuth, setPersistence, signInWithEmailAndPassword, browserLocalPersistence } from "@firebase/auth";
+
 
 const myTheme = createTheme({
   palette: {
@@ -27,7 +26,6 @@ function App() {
   const [route, setRoute] = useState(null);
   const [collectionRef, setRef] = useState(null)
 
-  // const taskCollectionRef = collection(db, "tasks");
 
 
     const handleDone = async (todo) => {
@@ -63,33 +61,34 @@ function App() {
       console.log("signed out ", user.email);
       signOut(auth);
     }
+
+
     signInWithEmailAndPassword(auth, email, pass).then((userCreds) => {
       console.log("Logged in: " + userCreds.user)
-
-      
       setUser(userCreds.user);
-
+  
       let r = `users/${userCreds.user.uid}/tasks`;
       if (userCreds.user.email == "simchal97@gmail.com")
         r = "tasks";
-
+  
       setRoute(r);
-
+  
       let ref = collection(db, r);
       setRef(ref);
-  
+      
+      auth.setPersistence(auth, browserLocalPersistence);
 
       }).catch( () => {
       console.log("get a real account asshole")
-        
     })
+
 
   }
 
   useEffect(  () => {
 
-    signInAnonymously(auth).then((user) => {
-      if (!user) {
+    signInAnonymously(auth).then((_user) => {
+      if (!_user) {
         console.log("Login failed");
         return;
       }
@@ -114,7 +113,7 @@ function App() {
     <>
     <ThemeProvider theme={myTheme}>
 
-      <TopBar data={data} setter={Setter} onSignIn={signIn} ref={collectionRef} route={route}  />
+      <TopBar data={data} setter={Setter} onSignIn={signIn} route={route}  />
 
     </ThemeProvider>
 
@@ -133,15 +132,13 @@ function App() {
     <>
         <ThemeProvider theme={myTheme}>
 
-      <TopBar data={data} setter={Setter} onSignIn={signIn}  ref={collectionRef} route={route}  />
+      <TopBar data={data} setter={Setter} onSignIn={signIn}  route={route}  />
         </ThemeProvider>
 
-        {/* <Stack container justifyContent={'center'}> */}
 
           <Typography variant='h1' sx={{m:4}} >Not signed In</Typography>
           <Typography variant='p1' sx={{m:4}} >sucks to be you...</Typography>
 
-        {/* </Stack> */}
 
 
     </>
