@@ -1,15 +1,18 @@
 import './App.css';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Typography } from '@mui/material';
 import TopBar from "./TopBar"
 import ViewTasks from "./ViewTasks"
 import DoneTasks from './DoneTasks';
 import { Route, Routes,} from 'react-router-dom';
 import { db } from './firebaseconfig';
 import { auth } from './firebaseconfig';
-import { signInAnonymously, signInWithEmailAndPassword } from '@firebase/auth';
+import { signInAnonymously, signInWithEmailAndPassword, signOut } from '@firebase/auth';
 import { useState, useEffect } from 'react';
 import { collection , getDocs, doc, deleteDoc, updateDoc } from '@firebase/firestore';
-
+import { Grid } from '@material-ui/core';
+import { Box } from '@mui/system';
+import { Stack } from '@mui/system';
 
 const myTheme = createTheme({
   palette: {
@@ -21,52 +24,63 @@ function App() {
 
   const [data, setData] = useState([]);
   const [user, setUser] = useState(null);
+  const [route, setRoute] = useState(null);
   const [collectionRef, setRef] = useState(null)
 
-  const taskCollectionRef = collection(db, "tasks");
+  // const taskCollectionRef = collection(db, "tasks");
 
 
-      const handleDone = async (todo) => {
-        const task = doc(db, "tasks", todo.id);
-        await updateDoc(task, {
-          complete : (!todo.complete)
-        })
-        Setter();
-      }
-      const handleDelete = async (todo) => {
-        const task = doc(db, "tasks", todo.id);
-        await deleteDoc(task);
-        
-        Setter();
-      }
+    const handleDone = async (todo) => {
+      const task = doc(db, route, todo.id);
+      await updateDoc(task, {
+        complete : (!todo.complete)
+      })
+      Setter();
+    }
+
+    const handleDelete = async (todo) => {
+      const task = doc(db, route, todo.id);
+      await deleteDoc(task);
+      
+      Setter();
+    }
 
 
 
   const resetData = async () => {
-    let newData = await getDocs(taskCollectionRef);
-    // let newData = await getDocs(collectionRef);
+    let newData = await getDocs(collectionRef);
     setData(newData.docs.map( (doc)=> ({...doc.data(), id:doc.id}) ));
     console.log("reset data in app");
     console.log(data);
   }
 
-  const Setter = async (newData) => {
-    resetData(newData);
+  const Setter = async () => {
+    resetData();
   }
 
-  const signIn = async () => {
-    signInWithEmailAndPassword(auth, "simcha@l.com", "123456").then((userCreds) => {
+  const signIn = async (email, pass) => {
+    if (user){
+      console.log("signed out ", user.email);
+      signOut(auth);
+    }
+    signInWithEmailAndPassword(auth, email, pass).then((userCreds) => {
       console.log("Logged in: " + userCreds.user)
+
       
       setUser(userCreds.user);
-      console.log(user.uid);
-      let route = `users/${user.uid}/tasks`;
-      let ref = collection(db, route);
+
+      let r = `users/${userCreds.user.uid}/tasks`;
+      if (userCreds.user.email == "simchal97@gmail.com")
+        r = "tasks";
+
+      setRoute(r);
+
+      let ref = collection(db, r);
       setRef(ref);
   
 
-      }).catch((e) => {
-      console.log(e)
+      }).catch( () => {
+      console.log("get a real account asshole")
         
     })
 
@@ -79,7 +93,7 @@ function App() {
         console.log("Login failed");
         return;
       }
-      // signIn();
+ 
 
       resetData();
 
@@ -87,12 +101,20 @@ function App() {
 
   }, [] );
 
+  useEffect(  () => {
+    if (user){
+      console.log("signed in " , user.email);
+      Setter();
+    }
 
-  return (
+  }, [user] )
+
+
+  return user? (
     <>
     <ThemeProvider theme={myTheme}>
 
-      <TopBar data={data} setter={setData} />
+      <TopBar data={data} setter={Setter} onSignIn={signIn} ref={collectionRef} route={route}  />
 
     </ThemeProvider>
 
@@ -107,6 +129,22 @@ function App() {
     </>
 
 
+  ) : (
+    <>
+        <ThemeProvider theme={myTheme}>
+
+      <TopBar data={data} setter={Setter} onSignIn={signIn}  ref={collectionRef} route={route}  />
+        </ThemeProvider>
+
+        {/* <Stack container justifyContent={'center'}> */}
+
+          <Typography variant='h1' sx={{m:4}} >Not signed In</Typography>
+          <Typography variant='p1' sx={{m:4}} >sucks to be you...</Typography>
+
+        {/* </Stack> */}
+
+
+    </>
   );
 }
 

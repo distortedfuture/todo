@@ -12,22 +12,23 @@ import { db } from './firebaseconfig';
 import { collection, doc, setDoc, getDocs } from '@firebase/firestore';
 import { Add } from '@mui/icons-material';
 
-async function addToTasks(_title, _text, _due, _urgent)
-{
-    let tasks = collection(db, "tasks");
-
-    await setDoc( doc(tasks, _title), {
-        title: _title, complete : false, urgent : _urgent, body : _text, due : _due
-    } );
-
-}
 
 
 export default function AddModel (props) {
   const [open, setOpen] = useState(false);
   const [isUrgent, setUrgent] = useState(!false );
-  const taskCollectionRef = collection(db, "tasks");
 
+  const taskCollectionRef = props.ref;
+  
+  async function addToTasks(_title, _text, _due, _urgent)
+  {
+      let tasks = collection(db, props.route);
+  
+      await setDoc( doc(tasks, _title), {
+          title: _title, complete : false, urgent : _urgent, body : _text, due : _due
+      } );
+  
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -54,12 +55,13 @@ export default function AddModel (props) {
 
 
     // update data list
-    var setTasks = async () => {
-      const data = await getDocs(taskCollectionRef);
-      props.setter(data.docs.map( (doc)=> ({...doc.data(), id:doc.id}) ));
-      console.log(data);
-    }
-    setTasks();
+    // var setTasks = async () => {
+    //   const data = await getDocs(taskCollectionRef);
+    //   props.setter();
+    //   console.log(data);
+    // }
+    // setTasks();
+    props.setter();
     handleClose();
   };
 
