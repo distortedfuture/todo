@@ -49,8 +49,6 @@ export default function SignInBox(props) {
       props.onRegister(email, pass);
       props.onSignIn(email, pass);
       setOpen(false);
-
-
     }
   }
 

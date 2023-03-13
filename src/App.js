@@ -42,7 +42,7 @@ function App() {
         body: "add tasks to get started",
         urgent:true,
         complete:false,
-        due: ""
+        due: "",
 
       }
       const usersRef = collection(db, "users");
@@ -50,6 +50,7 @@ function App() {
         id: _user.uid
       })
       const tasksRef = collection(db, `users/${_user.uid}/tasks`);
+      
       await addDoc(tasksRef, {
         data : helloBox,
       })
@@ -125,6 +126,7 @@ function App() {
       }).catch( () => {
       console.log("get a real account asshole")
     })
+    Setter();
 
 
   }
