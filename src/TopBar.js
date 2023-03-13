@@ -18,7 +18,7 @@ function TopBar(props) {
 
               <SignInBox  onSignIn={props.onSignIn} signOut={props.signOut}  />
 
-                      <Link to="./viewtasks"  style={{ textDecoration:'none' }} >
+                      <Link to="./"  style={{ textDecoration:'none' }} >
                       <Button  variant="contained" sx={{ p:2, m:2, }}>See Tasks</Button>
                       </Link>
                       <Link to="./doneTasks" style={{ textDecoration:'none' }}  >
