@@ -9,8 +9,8 @@ import { db } from './firebaseconfig';
 import { auth } from './firebaseconfig';
 import { signOut } from '@firebase/auth';
 import { useState, useEffect } from 'react';
-import { collection , getDocs, doc, deleteDoc, updateDoc } from '@firebase/firestore';
-import {  signInWithEmailAndPassword } from "@firebase/auth";
+import { collection , getDocs, doc, deleteDoc, updateDoc, addDoc } from '@firebase/firestore';
+import {  signInWithEmailAndPassword, createUserWithEmailAndPassword } from "@firebase/auth";
 
 
 const myTheme = createTheme({
@@ -34,6 +34,39 @@ function App() {
         complete : (!todo.complete)
       })
       Setter();
+    }
+
+    const addCollection = async (_user) => {
+      let helloBox = {
+        title:`hello ${_user.email}`,
+        body: "add tasks to get started",
+        urgent:true,
+        complete:false,
+        due: ""
+
+      }
+      const usersRef = collection(db, "users");
+      await addDoc(usersRef, {
+        id: _user.uid
+      })
+      const tasksRef = collection(db, `users/${_user.uid}/tasks`);
+      await addDoc(tasksRef, {
+        data : helloBox,
+      })
+      
+    }
+
+
+    const registerUser = (email, pass) => {
+      createUserWithEmailAndPassword(auth, email, pass).then(  (userCreds) => {
+        setUser(userCreds.user);
+        addCollection(userCreds.user);
+
+
+      } ).catch( (err) => {
+        console.log("fucked up making an account");
+        console.log(err);
+      } )
     }
 
     const handleDelete = async (todo) => {
@@ -139,7 +172,7 @@ function App() {
     <>
     <ThemeProvider theme={myTheme}>
 
-      <TopBar data={data} setter={Setter} onSignIn={signIn} route={route} signOut={handleSignOut}  />
+      <TopBar data={data} setter={Setter} onRegister={registerUser} onSignIn={signIn} route={route} signOut={handleSignOut}  />
 
     </ThemeProvider>
 
@@ -157,7 +190,7 @@ function App() {
     <>
         <ThemeProvider theme={myTheme}>
 
-      <TopBar data={data} setter={Setter} onSignIn={signIn}  route={route} signOut={handleSignOut} />
+      <TopBar data={data} setter={Setter} onRegister={registerUser}  onSignIn={signIn}  route={route} signOut={handleSignOut} />
         </ThemeProvider>
 
 

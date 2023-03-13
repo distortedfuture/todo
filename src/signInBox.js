@@ -13,6 +13,7 @@ import { IconButton } from '@mui/material';
 
 export default function SignInBox(props) {
   const [open, setOpen] = React.useState(false);
+  const [register, setRegister] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -28,6 +29,10 @@ export default function SignInBox(props) {
     setOpen(false);
   }
 
+  const toggleDialog = () => {
+    setRegister(!register);
+
+  }
 
   const handleSignIn = (e) =>
   {
@@ -36,9 +41,17 @@ export default function SignInBox(props) {
     let email = e.target.email.value;
     let pass = e.target.pass.value;
 
-    props.onSignIn(email, pass);
+    if (!register) {
+      props.onSignIn(email, pass);
+      setOpen(false);
+    } else {
+      
+      props.onRegister(email, pass);
+      props.onSignIn(email, pass);
+      setOpen(false);
 
-    setOpen(false);
+
+    }
   }
 
   return (
@@ -53,10 +66,10 @@ export default function SignInBox(props) {
       <Dialog open={open} onClose={handleClose}>
       <form  onSubmit={handleSignIn}>
 
-        <DialogTitle>Papers, please</DialogTitle>
+        <DialogTitle>{ register? "Register here" : "Papers, please" }</DialogTitle>
         <DialogContent>
           <DialogContentText>
-             Sign in ya dummy
+             {  register? "make an account" : "sign in ya dummy"  }
           </DialogContentText>
           <TextField
             
@@ -80,10 +93,12 @@ export default function SignInBox(props) {
 
         </DialogContent>
         <DialogActions>
-          <Button color='error' onClick={handleSignOut} >sign out</Button>
+          
+          { register? <></> : <Button color='error' onClick={handleSignOut} >sign out</Button> }
+          <Button color='success' onClick={toggleDialog}  >{register? "login" : "register"}</Button>
           <div style={{ flex:'1 0 0' }}></div>
           <Button onClick={handleClose}>I'm a loser</Button>
-          <Button  type="submit" >Sign In</Button>
+          <Button  type="submit" >{register? "Register" : "Sign In"}</Button>
         </DialogActions>
       </form >  
 

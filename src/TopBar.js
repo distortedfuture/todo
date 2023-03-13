@@ -16,7 +16,7 @@ function TopBar(props) {
 					<Toolbar sx={{justifyContent: "space-between"}}>
             <Stack direction="row">
 
-              <SignInBox  onSignIn={props.onSignIn} signOut={props.signOut}  />
+              <SignInBox  onSignIn={props.onSignIn} signOut={props.signOut} onRegister={props.onRegister}  />
 
                       <Link to="./"  style={{ textDecoration:'none' }} >
                       <Button  variant="contained" sx={{ p:2, m:2, }}>See Tasks</Button>
