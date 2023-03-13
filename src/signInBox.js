@@ -97,7 +97,7 @@ export default function SignInBox(props) {
           { register? <></> : <Button color='error' onClick={handleSignOut} >sign out</Button> }
           <Button color='success' onClick={toggleDialog}  >{register? "login" : "register"}</Button>
           <div style={{ flex:'1 0 0' }}></div>
-          <Button onClick={handleClose}>I'm a loser</Button>
+          <Button onClick={handleClose}>done</Button>
           <Button  type="submit" >{register? "Register" : "Sign In"}</Button>
         </DialogActions>
       </form >  
