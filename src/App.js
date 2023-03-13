@@ -45,7 +45,7 @@ function App() {
     const handleSignOut = () => {
       if (user) {
         console.log("good bye " + user.email);
-        // auth.signOut(user);
+        
         signOut(auth);
         setUser(null);
         setRef(null);
@@ -152,7 +152,6 @@ function App() {
     
 
     </>
-
 
   ) : (
     <>
