@@ -63,7 +63,6 @@ function App() {
         setUser(userCreds.user);
         addCollection(userCreds.user);
 
-
       } ).catch( (err) => {
         console.log("fucked up making an account");
         console.log(err);

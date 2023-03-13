@@ -5,8 +5,6 @@ import Task from './Task';
 
 
 function ViewTasks(props) {
-  
-
 
 
   return (
