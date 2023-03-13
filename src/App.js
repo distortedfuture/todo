@@ -4,13 +4,13 @@ import { Typography } from '@mui/material';
 import TopBar from "./TopBar"
 import ViewTasks from "./ViewTasks"
 import DoneTasks from './DoneTasks';
-import { Route, Routes, BrowserRouter} from 'react-router-dom';
+import { Route, Routes} from 'react-router-dom';
 import { db } from './firebaseconfig';
 import { auth } from './firebaseconfig';
-import { signInAnonymously, signOut } from '@firebase/auth';
+import { signOut } from '@firebase/auth';
 import { useState, useEffect } from 'react';
 import { collection , getDocs, doc, deleteDoc, updateDoc } from '@firebase/firestore';
-import { getAuth, setPersistence, signInWithEmailAndPassword, browserLocalPersistence } from "@firebase/auth";
+import {  signInWithEmailAndPassword } from "@firebase/auth";
 
 
 const myTheme = createTheme({
@@ -42,6 +42,20 @@ function App() {
       
       Setter();
     }
+    const handleSignOut = () => {
+      if (user) {
+        console.log("good bye " + user.email);
+        // auth.signOut(user);
+        signOut(auth);
+        setUser(null);
+        setRef(null);
+        setRoute(null);
+        setData(null);
+
+      }  else {
+        console.log("no one signed in so no one can sign out");
+      }
+    }
 
 
 
@@ -49,7 +63,6 @@ function App() {
     let newData = await getDocs(collectionRef);
     setData(newData.docs.map( (doc)=> ({...doc.data(), id:doc.id}) ));
     console.log("reset data in app");
-    console.log(data);
   }
 
   const Setter = async () => {
@@ -57,26 +70,24 @@ function App() {
   }
 
   const signIn = async (email, pass) => {
+    
     if (user){
       console.log("signed out ", user.email);
       signOut(auth);
     }
-
-
+    
     signInWithEmailAndPassword(auth, email, pass).then((userCreds) => {
-      console.log("Logged in: " + userCreds.user)
       setUser(userCreds.user);
-  
+      
       let r = `users/${userCreds.user.uid}/tasks`;
-      if (userCreds.user.email == "simchal97@gmail.com")
+      if (userCreds.user.email === "simchal97@gmail.com")
         r = "tasks";
-  
+
       setRoute(r);
-  
+      
       let ref = collection(db, r);
       setRef(ref);
       
-      auth.setPersistence(auth, browserLocalPersistence);
 
       }).catch( () => {
       console.log("get a real account asshole")
@@ -87,33 +98,48 @@ function App() {
 
   useEffect(  () => {
 
-    signInAnonymously(auth).then((_user) => {
-      if (!_user) {
-        console.log("Login failed");
-        return;
+    auth.onAuthStateChanged((_user) => {
+
+      setUser(_user);
+      if (_user)
+      {
+
+          let r = `users/${_user.uid}/tasks`;
+          if (_user.email === "simchal97@gmail.com")
+            r = "tasks";
+          
+          setRoute(r);
+          
+          let ref = collection(db, r);
+          setRef(ref);
       }
- 
 
-      resetData();
+    } )
+    console.log(auth);
 
-    })
+    Setter();
 
   }, [] );
 
+  // user hook
   useEffect(  () => {
     if (user){
       console.log("signed in " , user.email);
+      setRoute(`users/${user.uid}/tasks`)
+      if (user.email === "simchal97@gmail.com")
+        setRoute(`tasks`)
       Setter();
+      console.log(auth);
     }
 
-  }, [user] )
+  },[user] )
 
 
   return user? (
     <>
     <ThemeProvider theme={myTheme}>
 
-      <TopBar data={data} setter={Setter} onSignIn={signIn} route={route}  />
+      <TopBar data={data} setter={Setter} onSignIn={signIn} route={route} signOut={handleSignOut}  />
 
     </ThemeProvider>
 
@@ -132,7 +158,7 @@ function App() {
     <>
         <ThemeProvider theme={myTheme}>
 
-      <TopBar data={data} setter={Setter} onSignIn={signIn}  route={route}  />
+      <TopBar data={data} setter={Setter} onSignIn={signIn}  route={route} signOut={handleSignOut} />
         </ThemeProvider>
 
 

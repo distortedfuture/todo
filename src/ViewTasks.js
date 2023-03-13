@@ -20,7 +20,7 @@ function ViewTasks(props) {
       style={{ minHeight: '100vh', padding:150 }}  
       >
       {
-        props.data.map( (task) => {
+        props.data?.map( (task) => {
           return task.complete? "" : (
             <div key={task.id}>
             <Grid  item xs={4} sx={{ maxWidth:400, minWidth:300,  padding:4}}>

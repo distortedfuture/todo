@@ -22,6 +22,12 @@ export default function SignInBox(props) {
     console.log("lmao loser");
     setOpen(false);
   };
+  
+  const handleSignOut = () => {
+    props.signOut();
+    setOpen(false);
+  }
+
 
   const handleSignIn = (e) =>
   {
@@ -32,15 +38,15 @@ export default function SignInBox(props) {
 
     props.onSignIn(email, pass);
 
-    handleClose();
+    setOpen(false);
   }
 
   return (
     <div>
 
-      <IconButton onClick={handleClickOpen}  style={{color: "white", mt:2}}>
+      <IconButton onClick={handleClickOpen}  style={{color: "white", padding:2 }}>
 
-      <PersonIcon size='large' sx={{mt:2}} />
+      <PersonIcon fontSize='large' sx={{ mt:3}} />
         </IconButton>
 
         
@@ -74,6 +80,8 @@ export default function SignInBox(props) {
 
         </DialogContent>
         <DialogActions>
+          <Button color='error' onClick={handleSignOut} >sign out</Button>
+          <div style={{ flex:'1 0 0' }}></div>
           <Button onClick={handleClose}>I'm a loser</Button>
           <Button  type="submit" >Sign In</Button>
         </DialogActions>
