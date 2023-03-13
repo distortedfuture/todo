@@ -47,7 +47,8 @@ function App() {
       }
       const usersRef = collection(db, "users");
       await addDoc(usersRef, {
-        id: _user.uid
+        id: _user.uid,
+        email: _user.email
       })
       const tasksRef = collection(db, `users/${_user.uid}/tasks`);
       
@@ -59,14 +60,17 @@ function App() {
 
 
     const registerUser = (email, pass) => {
+      let res;
       createUserWithEmailAndPassword(auth, email, pass).then(  (userCreds) => {
-        setUser(userCreds.user);
+        // setUser(userCreds.user);
         addCollection(userCreds.user);
-
+        res = true;
       } ).catch( (err) => {
         console.log("fucked up making an account");
         console.log(err);
+        res = false;
       } )
+      return res;
     }
 
     const handleDelete = async (todo) => {
@@ -86,7 +90,7 @@ function App() {
         setData(null);
 
       }  else {
-        console.log("no one signed in so no one can sign out");
+        console.log("nobody is signed in");
       }
     }
 
@@ -111,6 +115,11 @@ function App() {
     
     signInWithEmailAndPassword(auth, email, pass).then((userCreds) => {
       setUser(userCreds.user);
+
+      // if (user){
+      //     console.log("signed out ", user.email);
+      //     signOut(auth);
+      // }
       
       let r = `users/${userCreds.user.uid}/tasks`;
       if (userCreds.user.email === "simchal97@gmail.com")

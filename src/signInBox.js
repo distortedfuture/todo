@@ -21,6 +21,7 @@ export default function SignInBox(props) {
 
   const handleClose = () => {
     console.log("lmao loser");
+    setRegister(false);
     setOpen(false);
   };
   
@@ -46,8 +47,11 @@ export default function SignInBox(props) {
       setOpen(false);
     } else {
       
-      props.onRegister(email, pass);
-      props.onSignIn(email, pass);
+      if  ( props.onRegister(email, pass) ) {
+        props.onSignIn(email, pass);
+      }
+      
+      setRegister(false);
       setOpen(false);
     }
   }

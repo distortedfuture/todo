@@ -20,7 +20,7 @@ const DoneTasks = (props) => {
                 if (task.complete)
                 return (
                     <div key={task.id}>
-            <Grid  item xs={4} sx={{ maxWidth:400, minWidth:300,  padding:4}}>
+                <Grid  item xs={4} sx={{ maxWidth:400, minWidth:300,  padding:4}}>
                 <Task task={task}  onUpdate={ () => props.onDone(task) } onDelete={() => props.onDelete(task)} />
 
                 </Grid>
