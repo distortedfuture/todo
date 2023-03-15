@@ -37,14 +37,7 @@ function App() {
     }
 
     const addCollection = async (_user) => {
-      let helloBox = {
-        title:`hello ${_user.email}`,
-        body: "add tasks to get started",
-        urgent:true,
-        complete:false,
-        due: "",
 
-      }
       const usersRef = collection(db, "users");
       await addDoc(usersRef, {
         id: _user.uid,
@@ -53,8 +46,13 @@ function App() {
       const tasksRef = collection(db, `users/${_user.uid}/tasks`);
       
       await addDoc(tasksRef, {
-        data : helloBox,
-      })
+        title:`hello ${_user.email}`,
+        body: "add tasks to get started",
+        urgent:true,
+        complete:false,
+        due: ""
+        }
+      )
       
     }
 
