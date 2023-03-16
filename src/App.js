@@ -53,7 +53,6 @@ function App() {
         due: ""
         }
       )
-      
     }
 
 
@@ -61,7 +60,9 @@ function App() {
       let res;
       createUserWithEmailAndPassword(auth, email, pass).then(  (userCreds) => {
         // setUser(userCreds.user);
-        addCollection(userCreds.user);
+        addCollection(userCreds.user).then( () => {
+          Setter();
+        } );
         res = true;
       } ).catch( (err) => {
         console.log("fucked up making an account");
