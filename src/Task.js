@@ -22,6 +22,8 @@ const daysTilDue = (date) => {
   
   
   export default function Task(props) {
+
+    let color = props.task.urgent? "red" : "blue";
       
     if (!props.task.complete)
     {
@@ -30,7 +32,7 @@ const daysTilDue = (date) => {
             <CardContent >
 
               <Stack direction="row" justifyContent={"center"} >
-              <Typography variant='h5' sx={{ color:"blue" }}  gutterBottom>{props.task.title}</Typography>
+              <Typography variant='h5' sx={{ color:color }}  gutterBottom>{props.task.title}</Typography>
               </Stack>
 
               <Typography variant='subtitle'  gutterBottom sx={{ p:1, mb:1 }} >{props.task.body}</Typography>
@@ -42,7 +44,7 @@ const daysTilDue = (date) => {
             <Button variant='outlined' size="small" color="success" onClick={ props.onUpdate } >done</Button>
             <Button variant='outlined' size="small"  color="error" onClick={ props.onDelete } >delete</Button>
 
-            { props.task.urgent?    <ErrorOutlineIcon  sx={{ m:1 }}  color="primary"/> : "" }
+            { props.task.urgent?    <ErrorOutlineIcon  sx={{ m:1 }}  color="primary"/> : <></> }
           </CardActions>
     
           </Card>

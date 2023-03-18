@@ -59,10 +59,7 @@ function App() {
     const registerUser = (email, pass) => {
       let res;
       createUserWithEmailAndPassword(auth, email, pass).then(  (userCreds) => {
-        // setUser(userCreds.user);
-        addCollection(userCreds.user).then( () => {
-          Setter();
-        } );
+        addCollection(userCreds.user);
         res = true;
       } ).catch( (err) => {
         console.log("fucked up making an account");
@@ -114,11 +111,6 @@ function App() {
     
     signInWithEmailAndPassword(auth, email, pass).then((userCreds) => {
       setUser(userCreds.user);
-
-      // if (user){
-      //     console.log("signed out ", user.email);
-      //     signOut(auth);
-      // }
       
       let r = `users/${userCreds.user.uid}/tasks`;
       if (userCreds.user.email === "simchal97@gmail.com")
